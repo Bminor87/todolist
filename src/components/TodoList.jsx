@@ -51,7 +51,7 @@ function TodoList() {
       <button className="button" onClick={addTodo}>
         Add
       </button>
-      <TodoTable todos={todos} />
+      <TodoTable todos={todos} setTodos={setTodos} />
     </div>
   );
 }

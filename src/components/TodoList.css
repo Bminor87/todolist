@@ -35,3 +35,14 @@
   background-color: #19ce73;
   color: #001313;
 }
+
+.TodoList .button.red {
+  background-color: #da4848;
+  color: #fff;
+}
+
+.TodoList .button.red:hover {
+  background-color: #ff6666;
+  outline: 2px solid #da4848;
+  border: 1px solid #da4848;
+}
