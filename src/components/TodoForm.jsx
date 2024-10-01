@@ -10,13 +10,21 @@ import {
   InputLabel,
 } from "@mui/material";
 
-import { useEffect, useState, useRef } from "react";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
+import "dayjs/locale/fi";
+
+import { useEffect, useState } from "react";
 
 function TodoForm({ todos, setTodos, gridRef }) {
+  const [locale, setLocale] = useState("fi");
+
   const [newTodo, setNewTodo] = useState({
     description: "",
     priority: "",
-    date: "",
+    date: null,
   });
 
   const [errors, setErrors] = useState({
@@ -69,56 +77,55 @@ function TodoForm({ todos, setTodos, gridRef }) {
 
   const resetTodo = () => {
     const currentDate = new Date().toISOString().split("T")[0];
-    setNewTodo({ description: "", priority: "", date: currentDate });
+    setNewTodo({ description: "", priority: "", date: dayjs(currentDate) });
     setErrors({ description: false, priority: false, date: false });
   };
 
   return (
-    <Stack spacing={2} direction="row">
-      <FormControl fullWidth>
-        <TextField
-          error={errors.date}
-          type="date"
-          name="date"
-          label="Date"
-          onChange={handleChange}
-          value={newTodo.date}
-        />
-      </FormControl>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
+      <Stack spacing={2} direction="row">
+        <FormControl fullWidth>
+          <DatePicker
+            value={newTodo.date}
+            name="date"
+            onChange={(newValue) => setNewTodo({ ...newTodo, date: newValue })}
+          />
+        </FormControl>
 
-      <FormControl fullWidth>
-        <InputLabel>Priority</InputLabel>
-        <Select
-          error={errors.priority}
-          label="Priority"
-          name="priority"
-          value={newTodo.priority}
-          onChange={handleChange}
-        >
-          <MenuItem value="Low">Low</MenuItem>
-          <MenuItem value="Medium">Medium</MenuItem>
-          <MenuItem value="High">High</MenuItem>
-        </Select>
-      </FormControl>
+        <FormControl fullWidth>
+          <InputLabel>Priority</InputLabel>
+          <Select
+            error={errors.priority}
+            label="Priority"
+            name="priority"
+            value={newTodo.priority}
+            onChange={handleChange}
+          >
+            <MenuItem value="Low">Low</MenuItem>
+            <MenuItem value="Medium">Medium</MenuItem>
+            <MenuItem value="High">High</MenuItem>
+          </Select>
+        </FormControl>
 
-      <FormControl fullWidth>
-        <TextField
-          error={errors.description}
-          label="Description"
-          name="description"
-          onChange={handleChange}
-          value={newTodo.description}
-        />
-      </FormControl>
+        <FormControl fullWidth>
+          <TextField
+            error={errors.description}
+            label="Description"
+            name="description"
+            onChange={handleChange}
+            value={newTodo.description}
+          />
+        </FormControl>
 
-      <Button variant="contained" onClick={addTodo}>
-        Add
-      </Button>
+        <Button variant="contained" onClick={addTodo}>
+          Add
+        </Button>
 
-      <Button variant="outlined" onClick={handleDelete}>
-        Delete
-      </Button>
-    </Stack>
+        <Button variant="outlined" onClick={handleDelete}>
+          Delete
+        </Button>
+      </Stack>
+    </LocalizationProvider>
   );
 }
 
