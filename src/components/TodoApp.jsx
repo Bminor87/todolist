@@ -1,11 +1,25 @@
-import TodoList from "./TodoList";
+import { AppBar, Toolbar, Typography, Stack } from "@mui/material";
+
+import { useState, useRef } from "react";
+
+import TodoForm from "./TodoForm";
+import TodoTable from "./TodoTable";
 
 function TodoApp() {
+  const [todos, setTodos] = useState([]);
+
+  const gridRef = useRef();
+
   return (
-    <div>
-      <h1>Todo App</h1>
-      <TodoList />
-    </div>
+    <Stack spacing={4} justifyContent={"center"} alignItems={"center"}>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6">Todo App</Typography>
+        </Toolbar>
+      </AppBar>
+      <TodoForm todos={todos} setTodos={setTodos} gridRef={gridRef} />
+      <TodoTable todos={todos} gridRef={gridRef} />
+    </Stack>
   );
 }
 

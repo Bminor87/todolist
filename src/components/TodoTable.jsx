@@ -1,32 +1,45 @@
 import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import "ag-grid-community/styles/ag-theme-material.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 
-function TodoTable({ todos, setTodos, gridRef }) {
+function TodoTable({ todos, gridRef }) {
   console.log("TodoTable rerenders");
 
   const [columnDefs, setColumnDefs] = useState([
     {
+      colId: "desc",
       field: "description",
       filter: true,
+      floatingFilter: true,
     },
     {
       field: "priority",
       filter: true,
-      cellStyle: (params) =>
-        params.value === "high" ? { color: "red" } : { color: "black" },
+      floatingFilter: true,
+      cellStyle: (params) => {
+        const color = params.value === "High" ? "red" : "black";
+        return { color: color };
+      },
     },
     {
       field: "date",
       filter: true,
+      floatingFilter: true,
+      valueFormatter: (params) => formatDate(params.value),
     },
   ]);
 
-  const handleDelete = (index) => {
-    setTodos(todos.filter((todo, i) => i !== index));
+  const autoSizeStrategy = {
+    type: "fitGridWidth",
+    defaultMinWidth: 100,
+    columnLimits: [
+      {
+        colId: "desc",
+        minWidth: 900,
+      },
+    ],
   };
 
   const formatDate = (date) => {
@@ -34,48 +47,17 @@ function TodoTable({ todos, setTodos, gridRef }) {
   };
 
   return (
-    <>
-      <div className="ag-theme-alpine" style={{ height: 400, width: 600 }}>
-        <AgGridReact
-          ref={gridRef}
-          columnDefs={columnDefs}
-          rowData={todos}
-          domLayout="autoHeight"
-          rowSelection={{ mode: "singleRow" }}
-          onGridReady={(params) => (gridRef.current = params.api)}
-        ></AgGridReact>
-      </div>
-
-      <table>
-        {todos.length === 0 ? (
-          <caption>No todos added yet</caption>
-        ) : (
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Description</th>
-              <th>&nbsp;</th>
-            </tr>
-          </thead>
-        )}
-        <tbody>
-          {todos.map((todo, index) => (
-            <tr key={index}>
-              <td>{formatDate(todo.date)}</td>
-              <td>{todo.description}</td>
-              <td>
-                <button
-                  className="button red"
-                  onClick={() => handleDelete(index)}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
+    <div className="ag-theme-quartz" style={{ height: "100%", width: "100%" }}>
+      <AgGridReact
+        autoSizeColumns={autoSizeStrategy}
+        ref={gridRef}
+        columnDefs={columnDefs}
+        rowData={todos}
+        domLayout="autoHeight"
+        rowSelection={{ mode: "singleRow" }}
+        onGridReady={(params) => (gridRef.current = params.api)}
+      ></AgGridReact>
+    </div>
   );
 }
 
