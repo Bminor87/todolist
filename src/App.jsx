@@ -3,13 +3,13 @@ import "./App.css";
 import Container from "@mui/material/Container";
 import { CssBaseline } from "@mui/material";
 
-import TodoApp from "./components/TodoApp.jsx";
+import TodoNav from "./components/TodoNav.jsx";
 
 function App() {
   return (
     <Container>
       <CssBaseline />
-      <TodoApp />
+      <TodoNav />
     </Container>
   );
 }

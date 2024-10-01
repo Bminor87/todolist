@@ -17,6 +17,7 @@ function TodoApp() {
           <Typography variant="h6">Todo App</Typography>
         </Toolbar>
       </AppBar>
+
       <TodoForm todos={todos} setTodos={setTodos} gridRef={gridRef} />
       <TodoTable todos={todos} gridRef={gridRef} />
     </Stack>
