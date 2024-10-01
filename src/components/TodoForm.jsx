@@ -30,24 +30,30 @@ function TodoForm({ todos, setTodos, gridRef }) {
   }, []);
 
   const addTodo = () => {
-    if (!newTodo.description) {
-      setErrors({ ...errors, description: true });
-      return;
-    }
-
-    if (!newTodo.priority) {
-      setErrors({ ...errors, priority: true });
-      return;
-    }
-
-    if (!newTodo.date) {
-      setErrors({ ...errors, date: true });
+    if (!newTodo.description || !newTodo.priority || !newTodo.date) {
+      setErrors({
+        description: !newTodo.description,
+        priority: !newTodo.priority,
+        date: !newTodo.date,
+      });
       return;
     }
 
     setTodos([...todos, newTodo]);
 
     resetTodo();
+  };
+
+  const handleChange = (e) => {
+    setNewTodo({
+      ...newTodo,
+      [e.target.name]: e.target.value,
+    });
+
+    setErrors({
+      ...errors,
+      [e.target.name]: false,
+    });
   };
 
   const handleDelete = () => {
@@ -73,10 +79,9 @@ function TodoForm({ todos, setTodos, gridRef }) {
         <TextField
           error={errors.date}
           type="date"
+          name="date"
           label="Date"
-          onChange={(event) =>
-            setNewTodo({ ...newTodo, date: event.target.value })
-          }
+          onChange={handleChange}
           value={newTodo.date}
         />
       </FormControl>
@@ -86,10 +91,9 @@ function TodoForm({ todos, setTodos, gridRef }) {
         <Select
           error={errors.priority}
           label="Priority"
+          name="priority"
           value={newTodo.priority}
-          onChange={(event) =>
-            setNewTodo({ ...newTodo, priority: event.target.value })
-          }
+          onChange={handleChange}
         >
           <MenuItem value="Low">Low</MenuItem>
           <MenuItem value="Medium">Medium</MenuItem>
@@ -101,9 +105,8 @@ function TodoForm({ todos, setTodos, gridRef }) {
         <TextField
           error={errors.description}
           label="Description"
-          onChange={(event) =>
-            setNewTodo({ ...newTodo, description: event.target.value })
-          }
+          name="description"
+          onChange={handleChange}
           value={newTodo.description}
         />
       </FormControl>
