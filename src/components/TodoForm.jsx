@@ -19,8 +19,11 @@ function TodoForm({ todos, setTodos, gridRef }) {
     date: "",
   });
 
-  const descriptionRef = useRef();
-  const priorityRef = useRef();
+  const [errors, setErrors] = useState({
+    description: false,
+    priority: false,
+    date: false,
+  });
 
   useEffect(() => {
     resetTodo();
@@ -28,14 +31,22 @@ function TodoForm({ todos, setTodos, gridRef }) {
 
   const addTodo = () => {
     if (!newTodo.description) {
-      descriptionRef.current.focus();
+      setErrors({ ...errors, description: true });
       return;
     }
+
     if (!newTodo.priority) {
-      priorityRef.current.focus();
+      setErrors({ ...errors, priority: true });
       return;
     }
+
+    if (!newTodo.date) {
+      setErrors({ ...errors, date: true });
+      return;
+    }
+
     setTodos([...todos, newTodo]);
+
     resetTodo();
   };
 
@@ -53,12 +64,14 @@ function TodoForm({ todos, setTodos, gridRef }) {
   const resetTodo = () => {
     const currentDate = new Date().toISOString().split("T")[0];
     setNewTodo({ description: "", priority: "", date: currentDate });
+    setErrors({ description: false, priority: false, date: false });
   };
 
   return (
     <Stack spacing={2} direction="row">
       <FormControl fullWidth>
         <TextField
+          error={errors.date}
           type="date"
           label="Date"
           onChange={(event) =>
@@ -71,7 +84,7 @@ function TodoForm({ todos, setTodos, gridRef }) {
       <FormControl fullWidth>
         <InputLabel>Priority</InputLabel>
         <Select
-          ref={priorityRef}
+          error={errors.priority}
           label="Priority"
           value={newTodo.priority}
           onChange={(event) =>
@@ -86,7 +99,7 @@ function TodoForm({ todos, setTodos, gridRef }) {
 
       <FormControl fullWidth>
         <TextField
-          ref={descriptionRef}
+          error={errors.description}
           label="Description"
           onChange={(event) =>
             setNewTodo({ ...newTodo, description: event.target.value })
