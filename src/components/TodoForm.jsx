@@ -10,6 +10,8 @@ import {
   InputLabel,
 } from "@mui/material";
 
+import Delete from "@mui/icons-material/Delete";
+
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -121,8 +123,8 @@ function TodoForm({ todos, setTodos, gridRef }) {
           Add
         </Button>
 
-        <Button variant="outlined" onClick={handleDelete}>
-          Delete
+        <Button variant="outlined" color="error" onClick={handleDelete}>
+          <Delete />
         </Button>
       </Stack>
     </LocalizationProvider>
