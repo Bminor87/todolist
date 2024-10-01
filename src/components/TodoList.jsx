@@ -4,8 +4,14 @@ import "./TodoList.css";
 
 function TodoList() {
   const [todos, setTodos] = useState([]);
-  const [newTodo, setNewTodo] = useState({ description: "", date: "" });
+  const [newTodo, setNewTodo] = useState({
+    description: "",
+    priority: "",
+    date: "",
+  });
   const descriptionRef = useRef();
+  const priorityRef = useRef();
+  const gridRef = useRef();
 
   useEffect(() => {
     resetTodo();
@@ -16,6 +22,10 @@ function TodoList() {
       descriptionRef.current.focus();
       return;
     }
+    if (!newTodo.priority) {
+      priorityRef.current.focus();
+      return;
+    }
     setTodos([...todos, newTodo]);
     resetTodo();
   };
@@ -24,9 +34,20 @@ function TodoList() {
     setNewTodo({ ...newTodo, description: event.target.value });
   };
 
+  const handleDelete = () => {
+    const nodes = gridRef.current.getSelectedNodes();
+    console.log(nodes);
+
+    if (nodes.length === 0) {
+      return;
+    }
+
+    setTodos(todos.filter((todo, i) => i != nodes[0].id));
+  };
+
   const resetTodo = () => {
     const currentDate = new Date().toISOString().split("T")[0];
-    setNewTodo({ description: "", date: currentDate });
+    setNewTodo({ description: "", priority: "", date: currentDate });
   };
 
   return (
@@ -40,6 +61,19 @@ function TodoList() {
         }
         value={newTodo.date}
       />
+      <select
+        ref={priorityRef}
+        className="priority"
+        onChange={(event) =>
+          setNewTodo({ ...newTodo, priority: event.target.value })
+        }
+        value={newTodo.priority}
+      >
+        <option value="">Priority</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
       <textarea
         ref={descriptionRef}
         className="description"
@@ -51,7 +85,10 @@ function TodoList() {
       <button className="button" onClick={addTodo}>
         Add
       </button>
-      <TodoTable todos={todos} setTodos={setTodos} />
+      <button className="button" onClick={handleDelete}>
+        Delete
+      </button>
+      <TodoTable todos={todos} setTodos={setTodos} gridRef={gridRef} />
     </div>
   );
 }

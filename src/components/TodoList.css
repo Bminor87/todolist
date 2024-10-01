@@ -7,13 +7,20 @@
 }
 
 .TodoList .date,
-.TodoList .description {
+.TodoList .description,
+.TodoList .priority {
   width: 100%;
   padding: 0.5rem;
   font-size: 1.2em;
   border: 1px solid #ccc;
   border-radius: 4px;
   margin-bottom: 1rem;
+}
+
+.TodoList .priority {
+  box-sizing: border-box;
+  margin-right: 0;
+  margin-left: 0;
 }
 
 .TodoList .description {
@@ -27,6 +34,7 @@
 
 .TodoList .date:focus,
 .TodoList .description:focus,
+.TodoList .priority:focus,
 .TodoList .button:hover {
   outline: 2px solid #19ce73;
 }
